@@ -81,7 +81,7 @@ DATABASES = {
         "NAME": "profileapp",
         "HOST": "localhost",
         "USER": "root",
-        "PASSWORD": "2101995Taha",
+        "PASSWORD": "your password",
     }
 }
 
