@@ -13,17 +13,14 @@ def image_path(instance, filename):
     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
     randomstr = "".join((random.choice(chars)) for x in range(10))
     _now = datetime.now()
-
-    return (
-        "profile_pic/{year}-{month}-{image_id}-{basename}-{randomstring}{ext}".format(
-            imageid=instance,
-            basename=basefilename,
-            randomstring=randomstr,
-            ext=file_extension,
-            year=_now.strftime("%Y"),
-            month=_now.strftime("%m"),
-            day=_now.strftime("%d"),
-        )
+    return "profile_pic/{year}-{month}-{basename}-{randomstring}{ext}".format(
+        imageid=instance,
+        basename=basefilename,
+        randomstring=randomstr,
+        ext=file_extension,
+        year=_now.strftime("%Y"),
+        month=_now.strftime("%m"),
+        day=_now.strftime("%d"),
     )
 
 
@@ -39,8 +36,23 @@ class Users(models.Model):
 
     def image_tag(self):
         return mark_safe(
-            ' <img scr="/users/media/%s" width="50" height="50" /> ' % (self.user_image)
+            ' <img src="/users/media/%s" width="50" height="50" /> ' % (self.user_image)
         )
 
     def __str__(self) -> str:
         return self.user_email
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="comments")
+    name = models.CharField(max_length=255)
+    email = models.EmailField(default="null")
+    body = models.TextField(default="null")
+    created_at = models.DateTimeField(now)
+    active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self) -> str:
+        return "Comment {} by {}".format(self.body, self.name)

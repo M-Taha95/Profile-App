@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Users
+from .models import Users, Comment
+
 
 admin.site.site_header = "Mohammed Taha"
 admin.site.site_title = "Admin Area!"
@@ -17,4 +18,15 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["user_fname", "user_lname", "user_email", "user_position"]
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["name", "body", "user_id", "created_at", "active"]
+    list_filter = ["active", "created_at"]
+    search_fields = ["name", "email", "body"]
+    actions = ["approve_comment"]
+
+    def approve_comment(self, request, queryset):
+        queryset.update(active=True)
+
+
 admin.site.register(Users, UserAdmin)
+admin.site.register(Comment)
